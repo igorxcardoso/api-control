@@ -29,6 +29,17 @@ public class ParkingSpotController {
         // O @RequestBody é para receber a requisição como json
         // O @Valid para fazer as validações dos DTOs. Se tiver algum erro com os dados na requisição, nem entra no método.
 
+
+        if(parkingSpotService.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
+        }
+        if(parkingSpotService.existsByParkingSpotNumber(parkingSpotDto.getParkingSpotNumber())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot is already in use!");
+        }
+        if(parkingSpotService.existsByApartmentAndBlock(parkingSpotDto.getApartment(), parkingSpotDto.getBlock())){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: Parking Spot already registered for this apartment/block!");
+        }
+
         var parkingSpotModel = new ParkingSpotModel();
 
         // Conversão de DTO para model, pois estamos recendo um DTO no método, mas persistimos um model.
