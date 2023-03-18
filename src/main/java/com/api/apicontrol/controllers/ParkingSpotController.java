@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -28,7 +29,6 @@ public class ParkingSpotController {
     public ResponseEntity<Object> createParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
         // O @RequestBody é para receber a requisição como json
         // O @Valid para fazer as validações dos DTOs. Se tiver algum erro com os dados na requisição, nem entra no método.
-
 
         if(parkingSpotService.existsByLicensePlateCar(parkingSpotDto.getLicensePlateCar())){
             return ResponseEntity.status(HttpStatus.CONFLICT).body("Conflict: License Plate Car is already in use!");
@@ -50,5 +50,10 @@ public class ParkingSpotController {
 
         // ResponseEntity para construir a resposta
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotModel));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ParkingSpotModel>> indexParkingSpots() {
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
     }
 }
