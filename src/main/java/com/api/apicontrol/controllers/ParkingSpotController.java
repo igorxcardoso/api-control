@@ -3,16 +3,18 @@ package com.api.apicontrol.controllers;
 import com.api.apicontrol.dtos.ParkingSpotDto;
 import com.api.apicontrol.models.ParkingSpotModel;
 import com.api.apicontrol.services.ParkingSpotService;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -25,6 +27,7 @@ public class ParkingSpotController {
         this.parkingSpotService = parkingSpotService;
     }
 
+    // POST  /control
     @PostMapping
     public ResponseEntity<Object> createParkingSpot(@RequestBody @Valid ParkingSpotDto parkingSpotDto) {
         // O @RequestBody é para receber a requisição como json
@@ -52,8 +55,21 @@ public class ParkingSpotController {
         return ResponseEntity.status(HttpStatus.CREATED).body(parkingSpotService.save(parkingSpotModel));
     }
 
+    // GET /control
     @GetMapping
     public ResponseEntity<List<ParkingSpotModel>> indexParkingSpots() {
         return ResponseEntity.status(HttpStatus.OK).body(parkingSpotService.findAll());
+    }
+
+    // GET  /control/:id
+    @GetMapping("/{id}")
+    public ResponseEntity<Object> showParkingSpots(@PathVariable(value = "id") UUID id) {
+        Optional<ParkingSpotModel> parkingSpotModelOptional = parkingSpotService.findById(id);
+
+        if (!parkingSpotModelOptional.isPresent()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Parking Spot not found.");
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(parkingSpotModelOptional.get());
     }
 }
