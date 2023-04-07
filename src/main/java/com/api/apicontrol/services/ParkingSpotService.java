@@ -49,4 +49,9 @@ public class ParkingSpotService {
     public void delete(ParkingSpotModel parkingSpotModel) {
         parkingSpotRepository.delete(parkingSpotModel);
     }
+
+    @Transactional
+    public void deleteAll() {
+        parkingSpotRepository.deleteAll();
+    }
 }

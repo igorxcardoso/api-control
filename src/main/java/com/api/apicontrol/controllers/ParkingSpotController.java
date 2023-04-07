@@ -85,4 +85,11 @@ public class ParkingSpotController {
         parkingSpotService.delete(parkingSpotModelOptional.get());
         return ResponseEntity.status(HttpStatus.OK).body("Parking Spot deleted successfully.");
     }
+
+    // DELETE  /control
+    @DeleteMapping
+    public ResponseEntity<Object> destroyAllParkingSpot() {
+        parkingSpotService.deleteAll();
+        return ResponseEntity.status(HttpStatus.OK).body("All of the Parking Spots were deleted.");
+    }
 }
